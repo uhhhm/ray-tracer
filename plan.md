@@ -75,8 +75,8 @@ fights. Target ~a few evenings before Phase 0.
 ### Phase 0 — Scaffolding
 - [done] `Vec3` type (x, y, z): add, sub, scalar mul/div, dot, cross, length,
       normalize, elementwise mul. Alias as `Point3` and `Color`.
-- [ ] Write a hardcoded gradient image to PPM; view it.
-- [ ] Unit tests for the vector math.
+- [done] Write a hardcoded gradient image to PPM; view it.
+- [done] Unit tests for the vector math.
 - **Milestone:** a color gradient PPM opens correctly.
 
 ### Phase 1 — Rays & camera
