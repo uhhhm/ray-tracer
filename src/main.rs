@@ -1,4 +1,5 @@
 mod vec3;
+mod ray;
 use std::fs::File;
 use std::io::{BufWriter, Write};
 
