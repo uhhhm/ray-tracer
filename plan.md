@@ -80,9 +80,9 @@ fights. Target ~a few evenings before Phase 0.
 - **Milestone:** a color gradient PPM opens correctly.
 
 ### Phase 1 — Rays & camera
-- [ ] `Ray { origin, direction }` with `at(t)`.
-- [ ] Simple camera: viewport, focal length, generate rays through pixels.
-- [ ] Background gradient based on ray direction (sky).
+- [done] `Ray { origin, direction }` with `at(t)`.
+- [done] Simple camera: viewport, focal length, generate rays through pixels.
+- [done] Background gradient based on ray direction (sky).
 - **Milestone:** blue-white vertical gradient rendered through rays.
 
 ### Phase 2 — Spheres & hits
