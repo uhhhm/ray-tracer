@@ -1,6 +1,7 @@
 use crate::vec3::{Point3, Vec3};
 use crate::ray::{Ray};
 use crate::hit_record::HitRecord;
+use crate::hittable::Hittable;
 use std::f64::INFINITY;
 
 pub struct Sphere{
@@ -16,8 +17,10 @@ impl Sphere {
     pub fn new(center: Point3, radius: f64) -> Sphere{
         Sphere{center, radius}
     }
+}
 
-    pub fn hit(&self, ray: &Ray, t_min: f64, t_max: f64) -> Option<HitRecord> {
+impl Hittable for Sphere {
+    fn hit(&self, ray: &Ray, t_min: f64, t_max: f64) -> Option<HitRecord> {
         let oc = ray.origin - self.center;
         let a = ray.direction.dot(&ray.direction);
         let half_b = oc.dot(&ray.direction);
@@ -95,6 +98,31 @@ mod tests{
 
         assert!(!result.unwrap().front_face);
         assert!((result.unwrap().t - 0.5).abs() < 1e-9);
+    }
+
+    #[test]
+    fn test_normal_faces_ray_from_inside(){
+        let origin = Point3::new(0.0, 0.0, -1.0);
+        let direction = Vec3::new(0.0, 0.0, -1.0);
+        let ray = Ray::new(origin, direction);
+        let sphere = Sphere::new(Vec3::new(0.0, 0.0, -1.0), 0.5);
+
+        let result = sphere.hit(&ray, 0.0, INFINITY).unwrap();
+
+        assert!(vec_close(result.normal, Vec3::new(0.0, 0.0, 1.0)));
+        assert!(result.normal.dot(&ray.direction) < 0.0);
+    }
+
+    #[test]
+    fn test_normal_faces_ray_from_outside(){
+        let origin = Point3::new(0.0, 0.0, 0.0);
+        let direction = Vec3::new(0.0, 0.0, -1.0);
+        let ray = Ray::new(origin, direction);
+        let sphere = Sphere::new(Vec3::new(0.0, 0.0, -1.0), 0.5);
+
+        let result = sphere.hit(&ray, 0.0, INFINITY).unwrap();
+
+        assert!(result.normal.dot(&ray.direction) < 0.0);
     }
 
     #[test]
