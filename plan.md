@@ -86,10 +86,10 @@ fights. Target ~a few evenings before Phase 0.
 - **Milestone:** blue-white vertical gradient rendered through rays.
 
 ### Phase 2 — Spheres & hits
-- [ ] Ray/sphere intersection (solve the quadratic).
-- [ ] `HitRecord { point, normal, t, front_face }`; correct outward normals.
-- [ ] `Hittable` trait + `HittableList`; nearest-hit over a list.
-- [ ] Shade by surface normal (map normal to RGB) to sanity-check.
+- [done] Ray/sphere intersection (solve the quadratic).
+- [done] `HitRecord { point, normal, t, front_face }`; correct outward normals.
+- [done] `Hittable` trait + `HittableList`; nearest-hit over a list.
+- [done] Shade by surface normal (map normal to RGB) to sanity-check.
 - **Milestone:** a shaded sphere on a ground sphere.
 
 ### Phase 3 — Antialiasing

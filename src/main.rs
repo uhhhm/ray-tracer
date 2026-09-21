@@ -8,11 +8,17 @@ use std::fs::File;
 use std::io::{BufWriter, Write};
 use crate::vec3::{Vec3, Point3, Color};
 use crate::ray::Ray;
+use crate::hittable::Hittable;
+use crate::hittable_list::HittableList;
+use crate::sphere::Sphere;
 
 const WIDTH: i32 = 512;
 const HEIGHT: i32 = 512;
 
-fn ray_color(ray: &Ray) -> Color {
+fn ray_color(ray: &Ray, world: &HittableList) -> Color {
+    if let Some(rec) = world.hit(ray, 0.0, f64::INFINITY) {
+        return (rec.normal + Color::new(1.0, 1.0, 1.0)) * 0.5;
+    }
     let rd_normalised = ray.direction.normalised();
     let t = 0.5 * (rd_normalised.y + 1.0);
     Color::new(1.0, 1.0, 1.0) * (1.0 - t) + Color::new(0.5, 0.7, 1.0) * t
@@ -32,6 +38,10 @@ fn main() {
     let file = File::create("image.ppm").unwrap();
     let mut writer = BufWriter::new(file);
     write_header(&mut writer);
+
+    let mut world = HittableList::new();
+    world.push(Sphere::new(Point3::new(0.0, -100.5, -1.0), 100.0));
+    world.push(Sphere::new(Point3::new(0.0, 0.0, -1.0), 0.5));
 
     let cam_center = Point3::new(0.0, 0.0, 0.0);
     let focal_length = 2.0;
@@ -55,7 +65,7 @@ fn main() {
             let ray_direction = pixel_center - cam_center;
             let ray = Ray::new(cam_center, ray_direction);
 
-            let color = ray_color(&ray);
+            let color = ray_color(&ray, &world);
             write_color(&mut writer, color);
         }
     }
