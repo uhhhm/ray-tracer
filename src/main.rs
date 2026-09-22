@@ -6,6 +6,7 @@ mod hittable_list;
 mod sphere;
 use std::fs::File;
 use std::io::{BufWriter, Write};
+use rand::Rng;
 use crate::vec3::{Vec3, Point3, Color};
 use crate::ray::Ray;
 use crate::hittable::Hittable;
@@ -14,6 +15,7 @@ use crate::sphere::Sphere;
 
 const WIDTH: i32 = 512;
 const HEIGHT: i32 = 512;
+const SAMPLES_PER_PIXEL: i32 = 100;
 
 fn ray_color(ray: &Ray, world: &HittableList) -> Color {
     if let Some(rec) = world.hit(ray, 0.0, f64::INFINITY) {
@@ -30,8 +32,15 @@ fn write_header(writer: &mut BufWriter<File>){
     writeln!(writer, "255").unwrap();
 }
 
+fn linear_to_gamma(linear: f64) -> f64{
+    if linear > 0.0 {linear.sqrt()} else {0.0}
+}
+
 fn write_color(writer: &mut BufWriter<File>, color:Color){
-    writeln!(writer, "{} {} {}", ((color.x*255.0) as i32), ((color.y*255.0) as i32), ((color.z*255.0) as i32)).unwrap();
+    let r = linear_to_gamma(color.x).clamp(0.0, 0.999);
+    let g = linear_to_gamma(color.y).clamp(0.0, 0.999);
+    let b = linear_to_gamma(color.z).clamp(0.0, 0.999);
+    writeln!(writer, "{} {} {}", ((r*256.0) as i32), ((g*256.0) as i32), ((b*256.0) as i32)).unwrap();
 }
 
 fn main() {
@@ -58,15 +67,22 @@ fn main() {
     let vp_upper_left = cam_center - Vec3::new(0.0, 0.0, focal_length) - vp_u/2.0 - vp_v/2.0;
     let upper_left_pixel = vp_upper_left + (pixel_delta_u + pixel_delta_v)/2.0;
 
+    let mut rng = rand::thread_rng();
+
     for i in 0..HEIGHT{
         for j in 0..WIDTH{
-            let pixel_center = upper_left_pixel + pixel_delta_u * (j as f64) + pixel_delta_v * (i as f64);
+            let mut color = Color::new(0.0, 0.0, 0.0);
+            for _ in 0..SAMPLES_PER_PIXEL{
+                let offset_u: f64 = rng.gen_range(-0.5..0.5);
+                let offset_v: f64 = rng.gen_range(-0.5..0.5);
+                let pixel_sample = upper_left_pixel + pixel_delta_u * (j as f64 + offset_u) + pixel_delta_v * (i as f64 + offset_v);
 
-            let ray_direction = pixel_center - cam_center;
-            let ray = Ray::new(cam_center, ray_direction);
+                let ray_direction = pixel_sample - cam_center;
+                let ray = Ray::new(cam_center, ray_direction);
 
-            let color = ray_color(&ray, &world);
-            write_color(&mut writer, color);
+                color = color + ray_color(&ray, &world);
+            }
+            write_color(&mut writer, color / (SAMPLES_PER_PIXEL as f64));
         }
     }
 }
