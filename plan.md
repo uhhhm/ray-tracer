@@ -93,8 +93,8 @@ fights. Target ~a few evenings before Phase 0.
 - **Milestone:** a shaded sphere on a ground sphere.
 
 ### Phase 3 — Antialiasing
-- [ ] Multiple jittered samples per pixel (use `rand`), average the color.
-- [ ] Gamma correction (sqrt) on output.
+- [done] Multiple jittered samples per pixel (use `rand`), average the color.
+- [done] Gamma correction (sqrt) on output.
 - **Milestone:** smooth edges, no jaggies.
 
 ### Phase 4 — Diffuse materials
