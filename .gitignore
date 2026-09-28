@@ -1,3 +1,4 @@
 /target
 /path-tracer-plan.md
 temp/
+.DS_store

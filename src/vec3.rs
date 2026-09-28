@@ -1,4 +1,5 @@
 use std::ops::{Add, Sub, Mul, Div, Neg};
+use rand::Rng;
 
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Vec3{
@@ -73,6 +74,17 @@ impl Vec3{
 
     pub fn normalised(&self) -> Vec3{
         *self / self.length()
+    }
+
+    pub fn random_unit_vector() -> Vec3{
+        let mut rng = rand::thread_rng();
+        loop{
+            let p = Vec3::new(rng.gen_range(-1.0..1.0), rng.gen_range(-1.0..1.0), rng.gen_range(-1.0..1.0));
+            let len_sq = p.length_squared();
+            if len_sq > 1e-160 && len_sq <= 1.0{ // avoid normalising vector too close to zero
+                return p / len_sq.sqrt();
+            }
+        }
     }
 }
 

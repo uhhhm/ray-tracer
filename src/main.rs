@@ -16,10 +16,15 @@ use crate::sphere::Sphere;
 const WIDTH: i32 = 512;
 const HEIGHT: i32 = 512;
 const SAMPLES_PER_PIXEL: i32 = 100;
+const MAX_DEPTH: i32 = 50;
 
-fn ray_color(ray: &Ray, world: &HittableList) -> Color {
-    if let Some(rec) = world.hit(ray, 0.0, f64::INFINITY) {
-        return (rec.normal + Color::new(1.0, 1.0, 1.0)) * 0.5;
+fn ray_color(ray: &Ray, world: &HittableList, depth: i32) -> Color {
+    if depth <= 0 {
+        return Color::new(0.0, 0.0, 0.0);
+    }
+    if let Some(rec) = world.hit(ray, 0.001, f64::INFINITY) {
+        let direction = rec.normal + Vec3::random_unit_vector();
+        return ray_color(&Ray::new(rec.point, direction), world, depth - 1) * 0.5;
     }
     let rd_normalised = ray.direction.normalised();
     let t = 0.5 * (rd_normalised.y + 1.0);
@@ -80,7 +85,7 @@ fn main() {
                 let ray_direction = pixel_sample - cam_center;
                 let ray = Ray::new(cam_center, ray_direction);
 
-                color = color + ray_color(&ray, &world);
+                color = color + ray_color(&ray, &world, MAX_DEPTH);
             }
             write_color(&mut writer, color / (SAMPLES_PER_PIXEL as f64));
         }

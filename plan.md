@@ -98,8 +98,8 @@ fights. Target ~a few evenings before Phase 0.
 - **Milestone:** smooth edges, no jaggies.
 
 ### Phase 4 — Diffuse materials
-- [ ] Random vectors in/on unit sphere; Lambertian scatter.
-- [ ] Recursive `ray_color` with a depth cap.
+- [done] Random vectors in/on unit sphere; Lambertian scatter.
+- [done] Recursive `ray_color` with a depth cap.
 - **Milestone:** matte spheres with soft indirect shading.
 
 ### Phase 5 — Metal & dielectrics
