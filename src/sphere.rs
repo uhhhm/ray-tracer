@@ -1,12 +1,12 @@
-use crate::vec3::{Point3, Vec3};
-use crate::ray::{Ray};
 use crate::hit_record::HitRecord;
 use crate::hittable::Hittable;
+use crate::ray::Ray;
+use crate::vec3::{Point3, Vec3};
 use std::f64::INFINITY;
 
-pub struct Sphere{
-    pub center:Point3,
-    pub radius:f64
+pub struct Sphere {
+    pub center: Point3,
+    pub radius: f64,
 }
 
 fn vec_close(a: Vec3, b: Vec3) -> bool {
@@ -14,8 +14,8 @@ fn vec_close(a: Vec3, b: Vec3) -> bool {
 }
 
 impl Sphere {
-    pub fn new(center: Point3, radius: f64) -> Sphere{
-        Sphere{center, radius}
+    pub fn new(center: Point3, radius: f64) -> Sphere {
+        Sphere { center, radius }
     }
 }
 
@@ -26,11 +26,13 @@ impl Hittable for Sphere {
         let half_b = oc.dot(&ray.direction);
         let c = oc.dot(&oc) - self.radius * self.radius;
         let disc = half_b * half_b - a * c;
-        if disc < 0.0 {return None;}
+        if disc < 0.0 {
+            return None;
+        }
         let sqrtd = disc.sqrt();
 
-        let root1 = (-half_b - sqrtd)/a;
-        let root2 = (-half_b + sqrtd)/a;
+        let root1 = (-half_b - sqrtd) / a;
+        let root2 = (-half_b + sqrtd) / a;
 
         if !(root1 < t_min || root1 > t_max) {
             let hit_point = ray.at(root1);
@@ -47,11 +49,11 @@ impl Hittable for Sphere {
 }
 
 #[cfg(test)]
-mod tests{
+mod tests {
     use super::*;
 
     #[test]
-    fn hit_test(){
+    fn hit_test() {
         let origin = Point3::new(0.0, 0.0, 0.0);
         let direction = Vec3::new(0.0, 0.0, -1.0);
         let ray = Ray::new(origin, direction);
@@ -66,7 +68,7 @@ mod tests{
     }
 
     #[test]
-    fn miss_test(){
+    fn miss_test() {
         let origin = Point3::new(0.0, 0.0, 0.0);
         let direction = Vec3::new(0.0, 1.0, -1.0);
         let ray = Ray::new(origin, direction);
@@ -77,7 +79,7 @@ mod tests{
     }
 
     #[test]
-    fn test_intersection_behind_ray_with_both_roots_negative(){
+    fn test_intersection_behind_ray_with_both_roots_negative() {
         let origin = Point3::new(0.0, 0.0, 0.0);
         let direction = Vec3::new(0.0, 0.0, -1.0);
         let ray = Ray::new(origin, direction);
@@ -88,7 +90,7 @@ mod tests{
     }
 
     #[test]
-    fn test_ray_starts_inside_sphere(){
+    fn test_ray_starts_inside_sphere() {
         let origin = Point3::new(0.0, 0.0, -1.0);
         let direction = Vec3::new(0.0, 0.0, -1.0);
         let ray = Ray::new(origin, direction);
@@ -101,7 +103,7 @@ mod tests{
     }
 
     #[test]
-    fn test_normal_faces_ray_from_inside(){
+    fn test_normal_faces_ray_from_inside() {
         let origin = Point3::new(0.0, 0.0, -1.0);
         let direction = Vec3::new(0.0, 0.0, -1.0);
         let ray = Ray::new(origin, direction);
@@ -114,7 +116,7 @@ mod tests{
     }
 
     #[test]
-    fn test_normal_faces_ray_from_outside(){
+    fn test_normal_faces_ray_from_outside() {
         let origin = Point3::new(0.0, 0.0, 0.0);
         let direction = Vec3::new(0.0, 0.0, -1.0);
         let ray = Ray::new(origin, direction);
@@ -126,7 +128,7 @@ mod tests{
     }
 
     #[test]
-    fn test_t_max(){
+    fn test_t_max() {
         let origin = Point3::new(0.0, 0.0, 0.0);
         let direction = Vec3::new(0.0, 0.0, -1.0);
         let ray = Ray::new(origin, direction);
@@ -134,13 +136,13 @@ mod tests{
 
         let result1 = sphere.hit(&ray, 0.0, 0.4);
         assert_eq!(result1, None);
-        
+
         let result2 = sphere.hit(&ray, 0.0, 0.6);
         assert!(result2.is_some());
     }
 
     #[test]
-    fn test_t_min(){
+    fn test_t_min() {
         let origin = Point3::new(0.0, 0.0, 0.0);
         let direction = Vec3::new(0.0, 0.0, -1.0);
         let ray = Ray::new(origin, direction);
@@ -148,7 +150,7 @@ mod tests{
 
         let result1 = sphere.hit(&ray, 2.0, INFINITY);
         assert_eq!(result1, None);
-        
+
         let result2 = sphere.hit(&ray, 0.6, INFINITY);
         assert!(result2.is_some());
     }

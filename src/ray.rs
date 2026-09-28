@@ -1,27 +1,27 @@
 use crate::vec3::{Point3, Vec3};
 
 #[derive(Debug, Clone, Copy, PartialEq)]
-pub struct Ray{
-    pub origin:Point3,
-    pub direction: Vec3
+pub struct Ray {
+    pub origin: Point3,
+    pub direction: Vec3,
 }
 
-impl Ray{
-    pub fn new(origin: Point3, direction: Vec3) -> Self{
-        Ray{origin, direction}
+impl Ray {
+    pub fn new(origin: Point3, direction: Vec3) -> Self {
+        Ray { origin, direction }
     }
 
-    pub fn at(&self, t: f64) -> Point3 { 
+    pub fn at(&self, t: f64) -> Point3 {
         self.origin + self.direction * t
     }
 }
 
 #[cfg(test)]
-mod tests{
+mod tests {
     use super::*;
 
     #[test]
-    fn test_mult_by_zero_returns_origin(){
+    fn test_mult_by_zero_returns_origin() {
         let a = Point3::new(1.0, 3.0, 6.0);
         let b = Vec3::new(2.0, -1.0, 19.0);
         let ray = Ray::new(a, b);
@@ -29,7 +29,7 @@ mod tests{
     }
 
     #[test]
-    fn test_at(){
+    fn test_at() {
         let origin = Point3::new(2.0, 4.0, 7.0);
         let dir = Vec3::new(2.0, 0.0, -1.0);
         let ray = Ray::new(origin, dir);
@@ -37,7 +37,7 @@ mod tests{
     }
 
     #[test]
-    fn test_at_neg_t(){
+    fn test_at_neg_t() {
         let origin = Point3::new(2.0, 4.0, 7.0);
         let dir = Vec3::new(2.0, 0.0, -1.0);
         let ray = Ray::new(origin, dir);

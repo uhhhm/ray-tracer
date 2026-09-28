@@ -1,6 +1,6 @@
-use crate::ray::{Ray};
 use crate::hit_record::HitRecord;
+use crate::ray::Ray;
 
-pub trait Hittable{
+pub trait Hittable {
     fn hit(&self, ray: &Ray, t_min: f64, t_max: f64) -> Option<HitRecord>;
 }
